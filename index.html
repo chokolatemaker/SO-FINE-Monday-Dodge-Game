@@ -6,10 +6,11 @@
 <title>SO FINE한 월요일 똥피하기 - Gameplay v2</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;font-family:Arial,sans-serif;touch-action:none;user-select:none}
-canvas{display:block;width:100vw;height:100vh;background:#fff}
-#hud{position:fixed;top:12px;left:0;right:0;text-align:center;font:bold 22px Arial;pointer-events:none}
-#overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.9);text-align:center}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111;font-family:Arial,sans-serif;touch-action:none;user-select:none}
+canvas{display:block;background:#fff}
+#game{position:fixed;top:0;left:50%;transform:translateX(-50%)}
+#hud{position:fixed;top:12px;left:50%;width:min(100vw,430px);transform:translateX(-50%);text-align:center;font:bold 22px Arial;pointer-events:none}
+#overlay{position:fixed;top:0;left:50%;width:min(100vw,430px);height:100vh;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.9);text-align:center}
 #overlay.intro{background:#050505;color:#fff;overflow:hidden}
 #introGrid{position:absolute;inset:0;width:100%;height:100%}
 #introLogo{position:relative;z-index:2;margin-top:-13vh;text-shadow:0 2px #000}
@@ -48,10 +49,11 @@ titleLogo.addEventListener('pointerup',e=>{
  if(logoTapCount>=7){resetLogoTaps();showEasterEgg()}
 });
 let introOn=true,introStart=performance.now();
-function resizeIntro(){const r=Math.min(devicePixelRatio||1,2);introGrid.width=innerWidth*r;introGrid.height=innerHeight*r;ig.setTransform(r,0,0,r,0,0)}
+function viewW(){return Math.min(innerWidth,430)}
+function resizeIntro(){const r=Math.min(devicePixelRatio||1,2),w=viewW(),h=innerHeight;introGrid.width=w*r;introGrid.height=h*r;introGrid.style.width=w+'px';introGrid.style.height=h+'px';ig.setTransform(r,0,0,r,0,0)}
 function drawIntro(now){
  if(!introOn)return;
- const w=innerWidth,h=innerHeight,hy=-h*.16,cx=w/2,gridTop=h*.43;
+ const w=viewW(),h=innerHeight,hy=-h*.16,cx=w/2,gridTop=h*.43;
  ig.fillStyle='#050505';ig.fillRect(0,0,w,h);ig.strokeStyle='#fff';ig.lineWidth=1;
  ig.save();ig.beginPath();ig.rect(0,gridTop,w,h-gridTop);ig.clip();
  const step=Math.max(42,w/8);
@@ -66,7 +68,7 @@ let W,H,dpr,run=false,last=0,startAt=0,spawnAcc=0,input=0,poops=[],splats=[];
 const P={x:0,y:0,speed:275,state:'idle',stateT:0,runT:0,dir:1};
 
 function resize(){
- dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+ dpr=Math.min(devicePixelRatio||1,2);W=viewW();H=innerHeight;
  c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px';
  x.setTransform(dpr,0,0,dpr,0,0);P.y=H-150;if(!run)P.x=W/2;
 }
